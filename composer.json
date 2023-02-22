@@ -1,0 +1,19 @@
+{
+    "name": "openwebconcept/wp-rest-cache-addon-for-owc",
+    "description": "Adds caching of the OpenWebConcept endpoints to the WP REST Cache.",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Richard Korthuis",
+            "email": "richardkorthuis@acato.nl",
+            "homepage": "https://www.acato.nl",
+            "role": "Backend Developer"
+        }
+    ],
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "bjornjohansen/wp-pre-commit-hook": "*"
+    }
+}
