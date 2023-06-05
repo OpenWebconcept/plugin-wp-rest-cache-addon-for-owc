@@ -1,0 +1,8 @@
+parameters:
+	level: 8
+	paths:
+		- admin
+		- includes
+		- wp-rest-cache-addon-for-owc.php
+	ignoreErrors:
+		- message: '#Call to static method get_instance\(\) on an unknown class WP_Rest_Cache_Plugin\\Includes\\Caching\\Caching.#'

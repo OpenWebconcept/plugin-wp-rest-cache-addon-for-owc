@@ -30,6 +30,8 @@ class Admin {
 
 	/**
 	 * Check if WP REST Cache is installed and activated.
+	 *
+	 * @return void
 	 */
 	public function check_requirements() {
 		if ( ! class_exists( 'WP_Rest_Cache_Plugin\Includes\Plugin' ) ) {
@@ -46,6 +48,8 @@ class Admin {
 
 	/**
 	 * Show a notice that WP REST Cache and WooCommerce are required for this plugin.
+	 *
+	 * @return void
 	 */
 	public function requirements_notice() {
 		echo '<div class="error"><p>' . esc_html__( '"WP REST Cache - AddOn for OpenWebConcept" requires "WP REST Cache" to be installed and activated', 'wp-rest-cache-addon-for-owc' ) . '</p></div>';

@@ -29,6 +29,8 @@ class Autoloader {
 	 * @since 1.0.0
 	 *
 	 * @param string $class_name The requested class.
+	 *
+	 * @return void
 	 */
 	public static function autoload( $class_name ) {
 		$file_path = explode( '\\', $class_name );

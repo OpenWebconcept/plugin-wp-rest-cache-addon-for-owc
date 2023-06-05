@@ -11,6 +11,8 @@
 
 namespace WPRC_OWC\Includes\Caching;
 
+use WP_Rest_Cache_Plugin\Includes\Caching\Caching;
+
 /**
  * Class responsible for caching and saving cache relations of PDC endpoints.
  *
@@ -18,87 +20,17 @@ namespace WPRC_OWC\Includes\Caching;
  * @subpackage WPRC_OWC/Includes/Caching
  * @author:    Richard Korthuis <richardkorthuis@acato.nl>
  */
-class Pdc_Caching {
+class Pdc_Caching extends Owc_Caching {
+
+	const PDC_BASE = 'owc/pdc/v1';
 
 	/**
 	 * The singleton instance of this class.
 	 *
 	 * @access private
-	 * @var    Caching $instance The singleton instance of this class.
+	 * @var    Pdc_Caching|null $instance The singleton instance of this class.
 	 */
 	private static $instance = null;
-
-	/**
-	 * The REST base for PDC endpoints.
-	 *
-	 * @access private
-	 * @var    string $pdc_base REST base for PDC endpoints.
-	 */
-	private $pdc_base = 'owc/pdc/v1';
-
-	/**
-	 * An array of known OWC endpoints.
-	 *
-	 * @access private
-	 * @var    array $owc_endpoints An array of known OWC endpoints.
-	 */
-	private $owc_endpoints = [];
-
-	/**
-	 * An array of OWC endpoints that should not be cached.
-	 *
-	 * @access private
-	 * @var    array $disallowed_owc_endpoints An array of OWC endpoints that should not be cached.
-	 */
-	private $disallowed_owc_endpoints = [];
-
-	/**
-	 * An array mapping endpoint keys to post-types.
-	 *
-	 * @access private
-	 * @var    array $mappings An array mapping endpoint keys to post-types.
-	 */
-	private $mappings = [
-		'items'     => 'pdc-item',
-		'sdg'       => 'pdc-item',
-		'sdg-kiss'  => 'pdc-item',
-		'themes'    => 'pdc-category',
-		'themas'    => 'pdc-category',
-		'subthemes' => 'pdc-subcategory',
-		'subthemas' => 'pdc-subcategory',
-		'groups'    => 'pdc-group',
-	];
-
-	/**
-	 * Constructor.
-	 */
-	private function __construct() {
-		if ( class_exists( 'OWC\PDC\Base\Foundation\Plugin' ) ) {
-			if ( ! isset( $this->owc_endpoints[ $this->pdc_base ] ) ) {
-				$this->owc_endpoints[ $this->pdc_base ] = [];
-			}
-			$this->owc_endpoints[ $this->pdc_base ][] = 'items';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'themas';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'themes';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'subthemas';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'subthemes';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'groups';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'sdg';
-			$this->owc_endpoints[ $this->pdc_base ][] = 'sdg-kiss';
-		}
-		if ( class_exists( 'OWC\PDC\Locations\Foundation\Plugin' ) ) {
-			if ( ! isset( $this->owc_endpoints[ $this->pdc_base ] ) ) {
-				$this->owc_endpoints[ $this->pdc_base ] = [];
-			}
-			$this->owc_endpoints[ $this->pdc_base ][] = 'locations';
-		}
-		if ( class_exists( 'OWC\PDC\InternalProducts\Foundation\Plugin' ) ) {
-			if ( ! isset( $this->disallowed_owc_endpoints[ $this->pdc_base ] ) ) {
-				$this->disallowed_owc_endpoints[ $this->pdc_base ] = [];
-			}
-			$this->disallowed_owc_endpoints[ $this->pdc_base ][] = 'items/internal'; // This endpoint needs authentication.
-		}
-	}
 
 	/**
 	 * Get the singleton instance of this class.
@@ -114,81 +46,45 @@ class Pdc_Caching {
 	}
 
 	/**
-	 * Filter which REST endpoints should be cached.
-	 *
-	 * @param array $allowed_endpoints An array of allowed endpoints.
-	 *
-	 * @return array An array of allowed endpoints.
+	 * Set up the necessary variables.
 	 */
-	public function add_owc_endpoints( $allowed_endpoints ) {
-		foreach ( $this->owc_endpoints as $namespace => $endpoints ) {
-			if ( ! isset( $allowed_endpoints[ $namespace ] ) && is_array( $endpoints ) && count( $endpoints ) ) {
-				$allowed_endpoints[ $namespace ] = [];
-			}
+	protected function setup() {
+		$this->rest_base = self::PDC_BASE;
 
-			foreach ( $endpoints as $endpoint ) {
-				if ( ! in_array( $endpoint, $allowed_endpoints[ $namespace ], true ) ) {
-					$allowed_endpoints[ $namespace ][] = $endpoint;
-				}
+		if ( class_exists( 'OWC\PDC\Base\Foundation\Plugin' ) ) {
+			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
+			$this->owc_endpoints[ $this->rest_base ][] = 'items';
+			$this->mappings['items']                   = 'pdc-item';
+			$this->owc_endpoints[ $this->rest_base ][] = 'themas';
+			$this->mappings['themas']                  = 'pdc-category';
+			$this->owc_endpoints[ $this->rest_base ][] = 'themes';
+			$this->mappings['themes']                  = 'pdc-category';
+			$this->owc_endpoints[ $this->rest_base ][] = 'subthemas';
+			$this->mappings['subthemas']               = 'pdc-subcategory';
+			$this->owc_endpoints[ $this->rest_base ][] = 'subthemes';
+			$this->mappings['subthemes']               = 'pdc-subcategory';
+			$this->owc_endpoints[ $this->rest_base ][] = 'groups';
+			$this->mappings['groups']                  = 'pdc-group';
+			$this->owc_endpoints[ $this->rest_base ][] = 'sdg';
+			$this->mappings['sdg']                     = 'pdc-item';
+			$this->owc_endpoints[ $this->rest_base ][] = 'sdg-kiss';
+			$this->mappings['sdg-kiss']                = 'pdc-item';
 		}
-
-		return $allowed_endpoints;
-	}
-
-	/**
-	 * Filter which REST endpoints should not be cached.
-	 *
-	 * @param array $disallowed_endpoints An array of disallowed endpoints.
-	 *
-	 * @return array An array of disallowed endpoints.
-	 */
-	public function disallow_owc_endpoints( $disallowed_endpoints ) {
-		foreach ( $this->disallowed_owc_endpoints as $namespace => $endpoints ) {
-			if ( ! isset( $disallowed_endpoints[ $namespace ] ) && is_array( $endpoints ) && count( $endpoints ) ) {
-				$disallowed_endpoints[ $namespace ] = [];
+		if ( class_exists( 'OWC\PDC\Locations\Foundation\Plugin' ) ) {
+			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
-
-			foreach ( $endpoints as $endpoint ) {
-				if ( ! in_array( $endpoint, $disallowed_endpoints[ $namespace ], true ) ) {
-					$disallowed_endpoints[ $namespace ][] = $endpoint;
-				}
+			$this->owc_endpoints[ $this->rest_base ][] = 'locations';
+			$this->mappings['locations']               = 'pdc-location';
+		}
+		if ( class_exists( 'OWC\PDC\InternalProducts\Foundation\Plugin' ) ) {
+			if ( ! isset( $this->disallowed_owc_endpoints[ $this->rest_base ] ) ) {
+				$this->disallowed_owc_endpoints[ $this->rest_base ] = [];
 			}
+			$this->disallowed_owc_endpoints[ $this->rest_base ][] = 'items/internal'; // This endpoint needs authentication.
 		}
-
-		return $disallowed_endpoints;
-	}
-
-	/**
-	 * Determine the correct object type for the current cache record.
-	 *
-	 * @param string $type Object type.
-	 * @param string $cache_key Cache key.
-	 * @param mixed  $data The data that is to be cached.
-	 * @param string $uri The requested URI.
-	 *
-	 * @return string The object type of the current cache record.
-	 */
-	public function determine_object_type( $type, $cache_key, $data, $uri ) {
-		$uri_parts    = wp_parse_url( $uri );
-		$request_path = rtrim( $uri_parts['path'], '/' );
-
-		// Make sure we only apply to allowed api calls.
-		$rest_prefix = sprintf( '/%s/%s/', get_option( 'wp_rest_cache_rest_prefix', 'wp-json' ), $this->pdc_base );
-		if ( strpos( $request_path, $rest_prefix ) === false ) {
-			return $type;
-		}
-
-		$rest_path       = substr( $request_path, strlen( $rest_prefix ) );
-		$rest_path_parts = explode( '/', $rest_path );
-
-		if ( count( $rest_path_parts ) ) {
-			if ( isset( $this->mappings[ $rest_path_parts[0] ] ) ) {
-				return $this->mappings[ $rest_path_parts[0] ];
-			}
-		}
-
-		return $type;
 	}
 
 	/**
@@ -202,53 +98,62 @@ class Pdc_Caching {
 	 * @return void
 	 */
 	public function process_cache_relations( $cache_id, $data, $object_type, $uri ) {
+		if ( ! in_array( $object_type, $this->mappings, true ) ) {
+			return;
+		}
+
+		if ( false !== strpos( $uri, $this->rest_base . '/sdg' ) ) {
+			$this->process_sdg_cache_relations( $cache_id, $data, $object_type, $uri );
+		} else {
+			parent::process_default_cache_relations( $cache_id, $data, $object_type, $uri );
+		}
+	}
+
+	/**
+	 * Process all cache relations for the current SDG cache record.
+	 *
+	 * @param int    $cache_id The row id of the current cache.
+	 * @param mixed  $data The data that is to be cached.
+	 * @param string $object_type Object type.
+	 * @param string $uri The requested URI.
+	 *
+	 * @return void
+	 */
+	private function process_sdg_cache_relations( $cache_id, $data, $object_type, $uri ) {
 		if ( ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
 			return;
 		}
 
-		$this->process_recursive_cache_relations( $cache_id, $object_type, $data['data'] );
+		$this->process_recursive_sdg_cache_relations( $cache_id, $object_type, $data['data'] );
 	}
 
 	/**
-	 * Process all cache relations recursively.
+	 * Process all SDG cache relations recursively.
 	 *
-	 * @param int    $cache_id The row id of the current cache.
-	 * @param string $object_type Object type.
-	 * @param array  $record An array of data for which the relations need to be determined.
+	 * @param int          $cache_id The row id of the current cache.
+	 * @param string       $object_type Object type.
+	 * @param array<mixed> $record An array of data for which the relations need to be determined.
 	 *
 	 * @return void
 	 */
-	private function process_recursive_cache_relations( $cache_id, $object_type, $record ) {
+	private function process_recursive_sdg_cache_relations( $cache_id, $object_type, $record ) {
 		if ( ! is_array( $record ) ) {
 			return;
 		}
 
 		$record = array_change_key_case( $record, CASE_LOWER );
-		if ( array_key_exists( 'id', $record ) ) {
-			$caching = \WP_Rest_Cache_Plugin\Includes\Caching\Caching::get_instance();
+		if ( array_key_exists( 'uuid', $record ) ) {
+			global $wpdb;
 
-			$caching->insert_cache_relation( $cache_id, $record['id'], $object_type );
+			$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_owc_enrichment_uuid' AND meta_value = %s", $record['uuid'] ) );
 
-			foreach ( $this->mappings as $key => $type ) {
-				if ( isset( $record[ $key ] ) && is_array( $record[ $key ] ) && count( $record[ $key ] ) ) {
-					$this->process_recursive_cache_relations( $cache_id, $type, $record[ $key ] );
-				}
-			}
-
-			if ( array_key_exists( 'taxonomies', $record ) ) {
-				foreach ( $record['taxonomies'] as $taxonomy => $items ) {
-					$this->process_recursive_cache_relations( $cache_id, $taxonomy, $items );
-				}
-			}
-
-			if ( array_key_exists( 'connected', $record ) ) {
-				foreach ( $record['connected'] as $type => $items ) {
-					$this->process_recursive_cache_relations( $cache_id, $type, $items );
-				}
+			if ( $post_id ) {
+				$caching = Caching::get_instance();
+				$caching->insert_cache_relation( $cache_id, $post_id, $object_type );
 			}
 		} else {
 			foreach ( $record as $subrecord ) {
-				$this->process_recursive_cache_relations( $cache_id, $object_type, $subrecord );
+				$this->process_recursive_sdg_cache_relations( $cache_id, $object_type, $subrecord );
 			}
 		}
 	}

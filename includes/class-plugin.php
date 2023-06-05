@@ -38,7 +38,12 @@ class Plugin {
 	public function __construct() {
 		$this->set_locale();
 		$this->define_admin_hooks();
-		$this->define_pdc_caching_hooks();
+
+		Caching\Openconvenanten_Caching::get_instance();
+		Caching\Openpub_Caching::get_instance();
+		Caching\Openwob_Caching::get_instance();
+		Caching\Openwoo_Caching::get_instance();
+		Caching\Pdc_Caching::get_instance();
 	}
 
 	/**
@@ -49,6 +54,8 @@ class Plugin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
+	 *
+	 * @return void
 	 */
 	private function set_locale() {
 		$plugin_i18n = new I18n();
@@ -61,25 +68,12 @@ class Plugin {
 	 *
 	 * @since    1.0.0
 	 * @access   private
+	 *
+	 * @return void
 	 */
 	private function define_admin_hooks() {
 		$admin = new Admin();
 
 		add_action( 'admin_init', [ $admin, 'check_requirements' ] );
-	}
-
-	/**
-	 * Register all the hooks related to the caching of PDC endpoints functionality of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function define_pdc_caching_hooks() {
-		$caching = Caching\Pdc_Caching::get_instance();
-
-		add_filter( 'wp_rest_cache/allowed_endpoints', [ $caching, 'add_owc_endpoints' ], 10, 1 );
-		add_filter( 'wp_rest_cache/disallowed_endpoints', [ $caching, 'disallow_owc_endpoints' ], 10, 1 );
-		add_filter( 'wp_rest_cache/determine_object_type', [ $caching, 'determine_object_type' ], 10, 4 );
-		add_action( 'wp_rest_cache/process_cache_relations', [ $caching, 'process_cache_relations' ], 10, 4 );
 	}
 }

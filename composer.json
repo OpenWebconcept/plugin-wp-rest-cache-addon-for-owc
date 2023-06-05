@@ -14,6 +14,15 @@
         "composer/installers": "~1.0"
     },
     "require-dev": {
-        "bjornjohansen/wp-pre-commit-hook": "*"
+        "bjornjohansen/wp-pre-commit-hook": "*",
+        "szepeviktor/phpstan-wordpress": "^1.1",
+        "phpstan/extension-installer": "^1.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
     }
 }
