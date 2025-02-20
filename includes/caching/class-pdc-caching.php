@@ -53,7 +53,7 @@ class Pdc_Caching extends Owc_Caching {
 
 		if ( class_exists( 'OWC\PDC\Base\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = [];
+				$this->owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'items';
 			$this->mappings['items']                   = 'pdc-item';
@@ -74,16 +74,23 @@ class Pdc_Caching extends Owc_Caching {
 		}
 		if ( class_exists( 'OWC\PDC\Locations\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = [];
+				$this->owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'locations';
 			$this->mappings['locations']               = 'pdc-location';
 		}
 		if ( class_exists( 'OWC\PDC\InternalProducts\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->disallowed_owc_endpoints[ $this->rest_base ] ) ) {
-				$this->disallowed_owc_endpoints[ $this->rest_base ] = [];
+				$this->disallowed_owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->disallowed_owc_endpoints[ $this->rest_base ][] = 'items/internal'; // This endpoint needs authentication.
+		}
+		if ( class_exists( 'OWC\PDC\Base\RestAPI\Controllers\SettingsController' ) ) {
+			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
+				$this->owc_endpoints[ $this->rest_base ] = array();
+			}
+			$this->owc_endpoints[ $this->rest_base ][] = 'settings';
+			$this->mappings['settings']                = 'pdc-settings';
 		}
 	}
 

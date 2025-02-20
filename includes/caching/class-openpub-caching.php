@@ -51,7 +51,7 @@ class Openpub_Caching extends Owc_Caching {
 
 		if ( class_exists( 'OWC\OpenPub\Base\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = [];
+				$this->owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'items';
 			$this->mappings['items']                   = 'openpub-item';
@@ -60,24 +60,31 @@ class Openpub_Caching extends Owc_Caching {
 		}
 		if ( class_exists( 'OWC\Persberichten\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = [];
+				$this->owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'persberichten';
 			$this->mappings['persberichten']           = 'press-item';
 		}
 		if ( class_exists( 'OWC\RuimtelijkePlannen\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = [];
+				$this->owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'ruimtelijke-plannen';
 			$this->mappings['ruimtelijke-plannen']     = 'spatial_plan';
 		}
 		if ( class_exists( 'OWC\Besluiten\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = [];
+				$this->owc_endpoints[ $this->rest_base ] = array();
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'besluiten';
 			$this->mappings['besluiten']               = 'public-decision';
+		}
+		if ( class_exists( 'OWC\OpenPub\Base\RestAPI\Controllers\SettingsController' ) ) {
+			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
+				$this->owc_endpoints[ $this->rest_base ] = array();
+			}
+			$this->owc_endpoints[ $this->rest_base ][] = 'settings';
+			$this->mappings['settings']                = 'openpub-settings';
 		}
 	}
 
