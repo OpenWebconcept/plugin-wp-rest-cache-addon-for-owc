@@ -52,7 +52,7 @@ abstract class Owc_Caching {
 	 * @access private
 	 * @var    array<string,string> $mappings An array mapping endpoint keys to post-types.
 	 */
-	protected $mappings;
+	protected $mappings = [];
 
 	/**
 	 * Constructor.
@@ -206,11 +206,10 @@ abstract class Owc_Caching {
 	 * @param int    $cache_id The row id of the current cache.
 	 * @param mixed  $data The data that is to be cached.
 	 * @param string $object_type Object type.
-	 * @param string $uri The requested URI.
 	 *
 	 * @return void
 	 */
-	public function process_default_cache_relations( $cache_id, $data, $object_type, $uri ) {
+	public function process_default_cache_relations( $cache_id, $data, $object_type ) {
 		if ( ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
 			return;
 		}

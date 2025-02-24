@@ -16,7 +16,8 @@
     "require-dev": {
         "bjornjohansen/wp-pre-commit-hook": "*",
         "szepeviktor/phpstan-wordpress": "^1.1",
-        "phpstan/extension-installer": "^1.1"
+        "phpstan/extension-installer": "^1.1",
+        "phpcompatibility/phpcompatibility-wp": "*"
     },
     "config": {
         "allow-plugins": {

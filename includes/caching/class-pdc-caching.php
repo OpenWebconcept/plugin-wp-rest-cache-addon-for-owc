@@ -85,6 +85,15 @@ class Pdc_Caching extends Owc_Caching {
 			}
 			$this->disallowed_owc_endpoints[ $this->rest_base ][] = 'items/internal'; // This endpoint needs authentication.
 		}
+		if ( class_exists( 'OWC\PDC\Base\RestAPI\Controllers\SettingsController' ) ) {
+			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
+				$this->owc_endpoints[ $this->rest_base ] = [];
+			}
+			$this->owc_endpoints[ $this->rest_base ][] = 'settings';
+			$this->mappings['settings']                = 'pdc-settings';
+
+			add_action( 'update_option__owc_pdc_base_settings', [ $this, 'clear_settings_cache' ] );
+		}
 	}
 
 	/**
@@ -105,7 +114,7 @@ class Pdc_Caching extends Owc_Caching {
 		if ( false !== strpos( $uri, $this->rest_base . '/sdg' ) ) {
 			$this->process_sdg_cache_relations( $cache_id, $data, $object_type, $uri );
 		} else {
-			parent::process_default_cache_relations( $cache_id, $data, $object_type, $uri );
+			parent::process_default_cache_relations( $cache_id, $data, $object_type );
 		}
 	}
 
@@ -156,5 +165,14 @@ class Pdc_Caching extends Owc_Caching {
 				$this->process_recursive_sdg_cache_relations( $cache_id, $object_type, $subrecord );
 			}
 		}
+	}
+
+	/**
+	 * Clear the settings cache.
+	 *
+	 * @return void
+	 */
+	public function clear_settings_cache() {
+		\WP_Rest_Cache_Plugin\Includes\Caching\Caching::get_instance()->delete_object_type_caches( 'pdc-settings' );
 	}
 }
