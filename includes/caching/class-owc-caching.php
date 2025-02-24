@@ -36,7 +36,7 @@ abstract class Owc_Caching {
 	 * @access private
 	 * @var    array<string,array<int,string>> $owc_endpoints An array of known OWC endpoints.
 	 */
-	protected $owc_endpoints = array();
+	protected $owc_endpoints = [];
 
 	/**
 	 * An array of OWC endpoints that should not be cached.
@@ -44,7 +44,7 @@ abstract class Owc_Caching {
 	 * @access private
 	 * @var    array<string,array<int,string>> $disallowed_owc_endpoints An array of OWC endpoints that should not be cached.
 	 */
-	protected $disallowed_owc_endpoints = array();
+	protected $disallowed_owc_endpoints = [];
 
 	/**
 	 * An array mapping endpoint keys to post-types.
@@ -52,7 +52,7 @@ abstract class Owc_Caching {
 	 * @access private
 	 * @var    array<string,string> $mappings An array mapping endpoint keys to post-types.
 	 */
-	protected $mappings = array();
+	protected $mappings = [];
 
 	/**
 	 * Constructor.
@@ -60,10 +60,10 @@ abstract class Owc_Caching {
 	protected function __construct() {
 		$this->setup();
 
-		add_filter( 'wp_rest_cache/allowed_endpoints', array( $this, 'add_owc_endpoints' ), 10, 1 );
-		add_filter( 'wp_rest_cache/disallowed_endpoints', array( $this, 'disallow_owc_endpoints' ), 10, 1 );
-		add_filter( 'wp_rest_cache/determine_object_type', array( $this, 'determine_object_type' ), 10, 4 );
-		add_action( 'wp_rest_cache/process_cache_relations', array( $this, 'process_cache_relations' ), 10, 4 );
+		add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'add_owc_endpoints' ], 10, 1 );
+		add_filter( 'wp_rest_cache/disallowed_endpoints', [ $this, 'disallow_owc_endpoints' ], 10, 1 );
+		add_filter( 'wp_rest_cache/determine_object_type', [ $this, 'determine_object_type' ], 10, 4 );
+		add_action( 'wp_rest_cache/process_cache_relations', [ $this, 'process_cache_relations' ], 10, 4 );
 	}
 
 	/**
@@ -131,7 +131,7 @@ abstract class Owc_Caching {
 	public function add_owc_endpoints( $allowed_endpoints ) {
 		foreach ( $this->owc_endpoints as $namespace => $endpoints ) {
 			if ( ! isset( $allowed_endpoints[ $namespace ] ) && is_array( $endpoints ) && count( $endpoints ) ) {
-				$allowed_endpoints[ $namespace ] = array();
+				$allowed_endpoints[ $namespace ] = [];
 			}
 
 			foreach ( $endpoints as $endpoint ) {
@@ -154,7 +154,7 @@ abstract class Owc_Caching {
 	public function disallow_owc_endpoints( $disallowed_endpoints ) {
 		foreach ( $this->disallowed_owc_endpoints as $namespace => $endpoints ) {
 			if ( ! isset( $disallowed_endpoints[ $namespace ] ) && is_array( $endpoints ) && count( $endpoints ) ) {
-				$disallowed_endpoints[ $namespace ] = array();
+				$disallowed_endpoints[ $namespace ] = [];
 			}
 
 			foreach ( $endpoints as $endpoint ) {
@@ -206,11 +206,10 @@ abstract class Owc_Caching {
 	 * @param int    $cache_id The row id of the current cache.
 	 * @param mixed  $data The data that is to be cached.
 	 * @param string $object_type Object type.
-	 * @param string $uri The requested URI.
 	 *
 	 * @return void
 	 */
-	public function process_default_cache_relations( $cache_id, $data, $object_type, $uri ) {
+	public function process_default_cache_relations( $cache_id, $data, $object_type ) {
 		if ( ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
 			return;
 		}

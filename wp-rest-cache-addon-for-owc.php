@@ -29,7 +29,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'WPRC_OWC_VERSION', '1.1.0' );
 
 require_once plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'class-autoloader.php';
-spl_autoload_register( array( '\WPRC_OWC\Includes\Autoloader', 'autoload' ) );
+spl_autoload_register( [ '\WPRC_OWC\Includes\Autoloader', 'autoload' ] );
 
 /**
  * Begins execution of the plugin.

@@ -51,7 +51,7 @@ class Openpub_Caching extends Owc_Caching {
 
 		if ( class_exists( 'OWC\OpenPub\Base\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = array();
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'items';
 			$this->mappings['items']                   = 'openpub-item';
@@ -60,31 +60,33 @@ class Openpub_Caching extends Owc_Caching {
 		}
 		if ( class_exists( 'OWC\Persberichten\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = array();
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'persberichten';
 			$this->mappings['persberichten']           = 'press-item';
 		}
 		if ( class_exists( 'OWC\RuimtelijkePlannen\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = array();
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'ruimtelijke-plannen';
 			$this->mappings['ruimtelijke-plannen']     = 'spatial_plan';
 		}
 		if ( class_exists( 'OWC\Besluiten\Foundation\Plugin' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = array();
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'besluiten';
 			$this->mappings['besluiten']               = 'public-decision';
 		}
 		if ( class_exists( 'OWC\OpenPub\Base\RestAPI\Controllers\SettingsController' ) ) {
 			if ( ! isset( $this->owc_endpoints[ $this->rest_base ] ) ) {
-				$this->owc_endpoints[ $this->rest_base ] = array();
+				$this->owc_endpoints[ $this->rest_base ] = [];
 			}
 			$this->owc_endpoints[ $this->rest_base ][] = 'settings';
 			$this->mappings['settings']                = 'openpub-settings';
+
+			add_action( 'update_option__owc_openpub_base_settings', [ $this, 'clear_settings_cache' ] );
 		}
 	}
 
@@ -103,6 +105,15 @@ class Openpub_Caching extends Owc_Caching {
 			return;
 		}
 
-		parent::process_default_cache_relations( $cache_id, $data, $object_type, $uri );
+		parent::process_default_cache_relations( $cache_id, $data, $object_type );
+	}
+
+	/**
+	 * Clear the settings cache.
+	 *
+	 * @return void
+	 */
+	public function clear_settings_cache() {
+		\WP_Rest_Cache_Plugin\Includes\Caching\Caching::get_instance()->delete_object_type_caches( 'openpub-settings' );
 	}
 }

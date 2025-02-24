@@ -54,5 +54,4 @@ class Admin {
 	public function requirements_notice() {
 		echo '<div class="error"><p>' . esc_html__( '"WP REST Cache - AddOn for OpenWebConcept" requires "WP REST Cache" to be installed and activated', 'wp-rest-cache-addon-for-owc' ) . '</p></div>';
 	}
-
 }
