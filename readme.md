@@ -25,6 +25,7 @@ The following plugins/endpoints are supported by this add-on and are automatical
 
 * owc/openpub/v1/items
 * owc/openpub/v1/themes
+* owc/openpub/v1/settings
 
 ### [Persberichten plugin](https://github.com/OpenWebconcept/plugin-openpub-persberichten)
 
@@ -56,6 +57,7 @@ The following plugins/endpoints are supported by this add-on and are automatical
 * owc/pdc/v1/groups
 * owc/pdc/v1/sdg
 * owc/pdc/v1/sdg-kiss
+* owc/pdc/v1/settings
 
 ### [PDC Locations](https://github.com/OpenWebconcept/plugin-pdc-locations)
 

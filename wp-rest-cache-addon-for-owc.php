@@ -14,7 +14,7 @@
  * Plugin Name:       WP REST Cache - AddOn for OpenWebConcept
  * Plugin URI:        https://www.openwebconcept.nl/
  * Description:       Adds caching of the OpenWebConcept endpoints to the WP REST Cache.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Author:            Acato
  * Author URI:        https://www.acato.nl
  * Text Domain:       wp-rest-cache-addon-for-owc
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'WPRC_OWC_VERSION', '1.1.0' );
+define( 'WPRC_OWC_VERSION', '1.2.0' );
 
 require_once plugin_dir_path( __FILE__ ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'class-autoloader.php';
 spl_autoload_register( [ '\WPRC_OWC\Includes\Autoloader', 'autoload' ] );
