@@ -96,7 +96,8 @@ class Pdc_Caching extends Owc_Caching {
 		}
 
 		// Delete cache relations on post save of specific post types.
-		add_action( 'save_post', [ $this, 'delete_cache_relations_on_post_save' ], 10, 3 );
+		// Instead of using save_post, we use transition_post_status, since the $update parameter of save_post is not reliable because of auto-drafts.
+		add_action( 'transition_post_status', [ $this, 'delete_cache_relations_on_new_publish' ], 10, 3 );
 	}
 
 	/**
@@ -180,38 +181,25 @@ class Pdc_Caching extends Owc_Caching {
 	}
 
 	/**
-	 * Delete cache relations when a post is saved.
+	 * Delete cache relations when a post is published.
 	 *
-	 * @param int      $post_id Post ID.
-	 * @param \WP_Post $post Post object.
-	 * @param bool     $update Whether this is an existing post being updated or not.
+	 * @param string   $new_status New post status.
+	 * @param string   $old_status Old post status.
+	 * @param \WP_Post $post The post object.
 	 *
 	 * @return void
 	 */
-	public function delete_cache_relations_on_post_save( $post_id, $post, $update ) {
-		if ( 'publish' !== $post->post_status ) {
-			return;
-		}
-
-		// Check if the saved post is a new post or an update. The $update parameter isn't doing what it's supposed to be doing,
-		// because of the auto-drafts that WordPress is creating.
-		// Therefore, $update also returns true on new posts, therefore we check the post date.
-		$post_date    = strtotime( $post->post_date );
-		$current_time = time();
-		$new_post     = false;
-		if ( ( $current_time - $post_date ) < 10 ) {
-			// New post, because the post date is within the last 10 seconds.
-			$new_post = true;
-		}
-
-		// Only proceed if it's a new post.
-		if ( ! $new_post ) {
+	public function delete_cache_relations_on_new_publish( $new_status, $old_status, $post ) {
+		// Only run for posts transitioning to 'publish' from any other status then 'publish'.
+		// Skip if not transitioning to publish, or if already published.
+		if ( 'publish' !== $new_status || 'publish' === $old_status ) {
 			return;
 		}
 
 		$caching           = Caching::get_instance();
 		$pdc_subcategories = [];
 
+		$post_id   = $post->ID;
 		$post_type = get_post_type( $post_id );
 		switch ( $post_type ) {
 			case 'pdc-item':
