@@ -3,7 +3,7 @@ Contributors: acato, rockfire
 Tags: cache, wp-rest-api, api, rest, rest cache, rest api cache, openwebconcept, owc
 Requires at least: 4.7
 Tested up to: 6.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
