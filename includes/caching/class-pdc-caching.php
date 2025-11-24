@@ -197,19 +197,18 @@ class Pdc_Caching extends Owc_Caching {
 		}
 
 		$caching           = Caching::get_instance();
+		$pdc_categories    = [];
 		$pdc_subcategories = [];
 
-		$post_id   = $post->ID;
-		$post_type = get_post_type( $post_id );
-		switch ( $post_type ) {
+		switch ( $post->post_type ) {
 			case 'pdc-item':
 				// Check the related pdc-categories and pdc-subcategories.
-				$pdc_categories    = $this->get_related_posts( $post_id, 'pdc-item_to_pdc-category' );
-				$pdc_subcategories = $this->get_related_posts( $post_id, 'pdc-item_to_pdc-subcategory' );
+				$pdc_categories    = $this->get_related_posts( $post->ID, 'pdc-item_to_pdc-category' );
+				$pdc_subcategories = $this->get_related_posts( $post->ID, 'pdc-item_to_pdc-subcategory' );
 				break;
 			case 'pdc-subcategory':
 				// Check the related pdc-categories.
-				$pdc_categories = $this->get_related_posts( $post_id, 'pdc-category_to_pdc-subcategory' );
+				$pdc_categories = $this->get_related_posts( $post->ID, 'pdc-category_to_pdc-subcategory' );
 				break;
 			default:
 				// do nothing.
