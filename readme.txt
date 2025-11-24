@@ -26,7 +26,7 @@ or install using Composer:
 
 == Changelog ==
 
-= 1.3.0 =
+= 1.3.1 =
 * Add support for deleting related cache for PDC categories and subcategories when adding a new PDC Item
 
 = 1.2.0 =
