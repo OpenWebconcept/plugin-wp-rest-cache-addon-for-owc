@@ -3,7 +3,7 @@ Contributors: acato, rockfire
 Tags: cache, wp-rest-api, api, rest, rest cache, rest api cache, openwebconcept, owc
 Requires at least: 4.7
 Tested up to: 6.0
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -25,6 +25,9 @@ or install using Composer:
 2. `composer require openwebconcept/wp-rest-cache-addon-for-owc`
 
 == Changelog ==
+
+= 1.3.0 =
+* Add support for deleting related cache for PDC categories and subcategories when adding a new PDC Item
 
 = 1.2.0 =
 * Add support for settings endpoints for OpenPub and PDC
