@@ -44,6 +44,7 @@ class Plugin {
 		Caching\Openwob_Caching::get_instance();
 		Caching\Openwoo_Caching::get_instance();
 		Caching\Pdc_Caching::get_instance();
+		Caching\Openagenda_Caching::get_instance();
 	}
 
 	/**
