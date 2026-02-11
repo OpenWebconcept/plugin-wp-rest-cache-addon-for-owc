@@ -26,6 +26,9 @@ or install using Composer:
 
 == Changelog ==
 
+= 1.4.0 =
+* Add support for OpenAgenda OWC plugin
+
 = 1.3.1 =
 * Add support for deleting related cache for PDC categories and subcategories when adding a new PDC Item
 
